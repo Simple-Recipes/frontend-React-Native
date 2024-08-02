@@ -1,3 +1,6 @@
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
 # Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
@@ -23,6 +26,12 @@ target 'GitHub_RN' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  # # Add this line
+  # pod 'RNScreens', :path => '../node_modules/react-native-screens'
+  # # Pods for YourApp
+  # pod 'react-native-async-storage', :path => '../node_modules/@react-native-async-storage/async-storage'
+
+
   target 'GitHub_RNTests' do
     inherit! :complete
     # Pods for testing
@@ -37,4 +46,5 @@ target 'GitHub_RN' do
       # :ccache_enabled => true
     )
   end
+
 end

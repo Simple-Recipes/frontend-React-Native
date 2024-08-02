@@ -1,4 +1,4 @@
-package com.github_rn
+package com.tempproject
 
 import android.app.Application
 import com.facebook.react.PackageList

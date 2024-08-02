@@ -1,0 +1,12 @@
+{
+  "editor.experimentalInlineEdit.backgroundColoring": false,
+  "editor.experimentalInlineEdit.enabled": false,
+  "breadcrumbs.enabled": true,
+  "workbench.editor.autoLockGroups": {
+    "markdown-preview-enhanced": true,
+    "default": true,
+    "workbench.editorinputs.sidebysideEditorInput": true
+  },
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.updateBuildConfiguration": "interactive"
+}

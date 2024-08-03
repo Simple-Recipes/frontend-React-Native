@@ -1,4 +1,8 @@
-import {StackActions, NavigationContainerRef} from '@react-navigation/native';
+import {
+  StackActions,
+  NavigationContainerRef,
+  CommonActions,
+} from '@react-navigation/native';
 
 export default class NavigationUtil {
   static navigation: NavigationContainerRef<any>;
@@ -34,5 +38,26 @@ export default class NavigationUtil {
       navigation = NavigationUtil.navigation;
     }
     navigation.dispatch(StackActions.replace('LoginPage', {}));
+  }
+
+  static registration(params: any = {}) {
+    let {navigation} = params;
+    if (!navigation) {
+      navigation = NavigationUtil.navigation;
+    }
+    navigation.dispatch(StackActions.replace('RegistrationPage', {}));
+  }
+
+  static resetToLogin(params: any = {}) {
+    let {navigation} = params;
+    if (!navigation) {
+      navigation = NavigationUtil.navigation;
+    }
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'LoginPage'}],
+      }),
+    );
   }
 }

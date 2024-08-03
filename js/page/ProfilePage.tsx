@@ -1,13 +1,29 @@
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, StyleSheet, View, Text, Image} from 'react-native';
-import NavigationUtil from '../navigator/NavigationUtil';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import Storage from '../util/storage';
-import Button from '../common/Button';
 import InputField from '../common/InputField';
-import Header from '../common/Header';
+import Button from '../common/Button';
+import Constants from '../expand/dao/Constants';
+import {get, put} from '../expand/dao/HiNet';
+import NavigationUtil from '../util/NavigationUtil';
 
-const ProfileScreen = ({}) => {
-  const [user, setUser] = useState({
+interface UserProfile {
+  username: string;
+  email: string;
+  avatar: string;
+}
+
+const ProfilePage = () => {
+  const navigation = useNavigation();
+  const [user, setUser] = useState<UserProfile>({
     username: '',
     email: '',
     avatar: '',
@@ -22,13 +38,12 @@ const ProfileScreen = ({}) => {
   const fetchUserProfile = async () => {
     try {
       const token = await Storage.getItem('jwt-token');
-      const response = await fetch('http://localhost:8085/user/profile', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      setUser(data);
+      const response = await get(Constants.user.profile)();
+      const userData = response as UserProfile;
+      userData.avatar =
+        userData.avatar ||
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8KBogEsVJytTynCC0znYh07_aw_ylaOLd_g&usqp=CAU';
+      setUser(userData);
     } catch (e) {
       setMsg('Failed to load user profile');
     }
@@ -37,14 +52,7 @@ const ProfileScreen = ({}) => {
   const onUpdateProfile = async () => {
     try {
       const token = await Storage.getItem('jwt-token');
-      await fetch('http://localhost:8085/user/profile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(user),
-      });
+      await put(Constants.user.updateProfile)(user);
       setEditMode(false);
       setMsg('Profile updated successfully');
     } catch (e) {
@@ -52,9 +60,23 @@ const ProfileScreen = ({}) => {
     }
   };
 
+  const onLogout = () => {
+    // Clear token and other storage
+    Storage.removeItem('jwt-token');
+    // Reset to LoginPage and prevent back navigation
+    NavigationUtil.resetToLogin({navigation});
+  };
+
   return (
     <SafeAreaView style={styles.root}>
-      <Header title="Profile" onBackPress={undefined} />
+      <View style={styles.header}>
+        <Text style={styles.title}>Profile</Text>
+        {editMode && (
+          <TouchableOpacity onPress={onUpdateProfile}>
+            <Text style={styles.save}>Save</Text>
+          </TouchableOpacity>
+        )}
+      </View>
       <View style={styles.content}>
         <Image source={{uri: user.avatar}} style={styles.avatar} />
         {editMode ? (
@@ -69,15 +91,26 @@ const ProfileScreen = ({}) => {
               value={user.email}
               onChangeText={(text: any) => setUser({...user, email: text})}
             />
-            <Button title="Save" onPress={onUpdateProfile} />
           </>
         ) : (
           <>
-            <Text style={styles.text}>Username: {user.username}</Text>
-            <Text style={styles.text}>Email: {user.email}</Text>
+            <Text style={styles.text}>{user.username}</Text>
+            <Text style={styles.text}>{user.email}</Text>
           </>
         )}
         <Text style={styles.msg}>{msg}</Text>
+      </View>
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={() => NavigationUtil.goPage({}, 'HomePage')}>
+          <Text style={styles.footerText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => NavigationUtil.goPage({}, 'ProfilePage')}>
+          <Text style={styles.footerText}>Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onLogout}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -87,6 +120,20 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#F1F5F6',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 16,
+    backgroundColor: '#ffffff',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  save: {
+    fontSize: 16,
+    color: '#1d8cd7',
   },
   content: {
     flex: 1,
@@ -102,6 +149,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     marginBottom: 8,
+    textAlign: 'center',
   },
   msg: {
     fontSize: 14,
@@ -109,6 +157,20 @@ const styles = StyleSheet.create({
     marginTop: 12,
     textAlign: 'center',
   },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 16,
+    backgroundColor: '#ffffff',
+  },
+  footerText: {
+    fontSize: 16,
+    color: '#647987',
+  },
+  logoutText: {
+    fontSize: 16,
+    color: '#ff0000',
+  },
 });
 
-export default ProfileScreen;
+export default ProfilePage;

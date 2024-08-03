@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import NavigationUtil from '../navigator/NavigationUtil';
+import NavigationUtil from '../util/NavigationUtil';
 import Button from '../common/Button';
 import InputField from '../common/InputField';
 

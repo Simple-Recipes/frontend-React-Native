@@ -39,7 +39,7 @@ export default class LoginDao {
           const {code, msg, data} = res;
           if (code === 1 && data && data.token) {
             saveBoarding(data.token); // 存储token
-            resolve(data || msg);
+            resolve(res);
           } else {
             reject(res);
           }

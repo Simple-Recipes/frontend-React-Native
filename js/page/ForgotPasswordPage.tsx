@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import NavigationUtil from '../navigator/NavigationUtil';
+import NavigationUtil from '../util/NavigationUtil';
 import Button from '../common/Button';
 import InputField from '../common/InputField';
 import Header from '../common/Header';

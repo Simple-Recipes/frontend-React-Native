@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {SafeAreaView, View, Text, Button, StyleSheet} from 'react-native';
-import NavigationUtil from '../navigator/NavigationUtil';
+import NavigationUtil from '../util/NavigationUtil';
 
 const HomePage = (props: any) => {
   const {navigation} = props;

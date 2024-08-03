@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import LoginDao from '../expand/dao/LoginDao';
-import NavigationUtil from '../navigator/NavigationUtil';
+import NavigationUtil from '../util/NavigationUtil';
 import Button from '../common/Button';
 import InputField from '../common/InputField';
 
@@ -26,11 +26,8 @@ const LoginPage = ({navigation}) => {
     LoginDao.getInstance()
       .login(username, password)
       .then(res => {
-        if (res.code === 1) {
-          NavigationUtil.resetToHomePage({navigation});
-        } else {
-          setMsg(res.msg);
-        }
+        console.log('Login successful:', res); // 打印登录成功的响应
+        NavigationUtil.goPage({}, 'HomePage'); // 使用导航工具类进行页面跳转
       })
       .catch(e => {
         const {msg} = e;

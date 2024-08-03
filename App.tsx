@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {enableScreens} from 'react-native-screens';
-import NavigationUtil from './js/navigator/NavigationUtil';
+import NavigationUtil from './js/util/NavigationUtil';
 import LoginPage from './js/page/LoginPage';
 import HomePage from './js/page/HomePage';
 import ProfilePage from './js/page/ProfilePage';

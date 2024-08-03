@@ -1,4 +1,3 @@
-// js/util/NavigationUtil.ts
 import {StackActions, NavigationContainerRef} from '@react-navigation/native';
 
 export default class NavigationUtil {
@@ -13,7 +12,7 @@ export default class NavigationUtil {
     navigation.navigate(page, {...params, navigation: undefined});
   }
 
-  static goBack(navigation: any) {
+  static goBack(navigation: {goBack: () => void}) {
     navigation.goBack();
   }
 

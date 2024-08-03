@@ -1,18 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  TextInput,
-  Image,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text, Image} from 'react-native';
 import NavigationUtil from '../navigator/NavigationUtil';
 import Storage from '../util/storage';
+import Button from '../common/Button';
+import InputField from '../common/InputField';
+import Header from '../common/Header';
 
-const ProfileScreen = (props: any) => {
-  const {navigation} = props;
+const ProfileScreen = ({}) => {
   const [user, setUser] = useState({
     username: '',
     email: '',
@@ -60,28 +54,20 @@ const ProfileScreen = (props: any) => {
 
   return (
     <SafeAreaView style={styles.root}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Profile</Text>
-        <Button
-          title={editMode ? 'Cancel' : 'Edit'}
-          onPress={() => setEditMode(!editMode)}
-        />
-      </View>
+      <Header title="Profile" onBackPress={undefined} />
       <View style={styles.content}>
         <Image source={{uri: user.avatar}} style={styles.avatar} />
         {editMode ? (
           <>
-            <TextInput
-              style={styles.input}
-              value={user.username}
-              onChangeText={text => setUser({...user, username: text})}
+            <InputField
               placeholder="Username"
+              value={user.username}
+              onChangeText={(text: any) => setUser({...user, username: text})}
             />
-            <TextInput
-              style={styles.input}
-              value={user.email}
-              onChangeText={text => setUser({...user, email: text})}
+            <InputField
               placeholder="Email"
+              value={user.email}
+              onChangeText={(text: any) => setUser({...user, email: text})}
             />
             <Button title="Save" onPress={onUpdateProfile} />
           </>
@@ -102,16 +88,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F1F5F6',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 16,
-    backgroundColor: '#ffffff',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
   content: {
     flex: 1,
     padding: 16,
@@ -122,13 +98,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignSelf: 'center',
     marginBottom: 16,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
   },
   text: {
     fontSize: 16,

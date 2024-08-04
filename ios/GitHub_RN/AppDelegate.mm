@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 #import <React/RCTBundleURLProvider.h>
-#import "RNSplashScreen.h" // 添加此行
+#import "RNSplashScreen.h"
+
 
 @implementation AppDelegate
 

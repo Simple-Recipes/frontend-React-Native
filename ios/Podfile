@@ -30,7 +30,7 @@ target 'GitHub_RN' do
   # pod 'RNScreens', :path => '../node_modules/react-native-screens'
   # # Pods for YourApp
   # pod 'react-native-async-storage', :path => '../node_modules/@react-native-async-storage/async-storage'
-
+  # pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
   target 'GitHub_RNTests' do
     inherit! :complete

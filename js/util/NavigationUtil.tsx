@@ -24,7 +24,7 @@ export default class NavigationUtil {
     const {navigation} = params;
     if (!navigation) {
       console.log(
-        'NavigationUtil.resetToHomePage: navigation is null or undefined',
+        'NavigationUtil.resetToHomePage: navigation is null or undefined'
       );
       return;
     }
@@ -57,7 +57,7 @@ export default class NavigationUtil {
       CommonActions.reset({
         index: 0,
         routes: [{name: 'LoginPage'}],
-      }),
+      })
     );
   }
 }

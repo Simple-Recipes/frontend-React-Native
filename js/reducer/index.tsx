@@ -1,9 +1,11 @@
 import {combineReducers} from 'redux';
-import themeReducer from './themeReducer';
+import themeReducer from './theme/themeReducer';
 
+// 定义根reducer
 const rootReducer = combineReducers({
   theme: themeReducer,
-  // Add other reducers here
 });
 
+// 导出根reducer类型
+export type RootState = ReturnType<typeof rootReducer>;
 export default rootReducer;

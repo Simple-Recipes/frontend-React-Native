@@ -7,10 +7,26 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  TextInputProps,
+  GestureResponderEvent,
 } from 'react-native';
 
-export const Input = (props: any) => {
-  const {label, placeholder, shortLine, secure, onChangeText} = props;
+interface InputProps extends TextInputProps {
+  label: string;
+  placeholder?: string;
+  shortLine?: boolean;
+  secure?: boolean;
+  onChangeText: (text: string) => void;
+}
+
+export const Input: React.FC<InputProps> = ({
+  label,
+  placeholder,
+  shortLine = false,
+  secure = false,
+  onChangeText,
+  ...rest
+}) => {
   return (
     <View style={{backgroundColor: 'white'}}>
       <View style={styles.row}>
@@ -18,10 +34,10 @@ export const Input = (props: any) => {
         <TextInput
           placeholder={placeholder}
           secureTextEntry={secure}
-          //取消自动大写
-          autoCapitalize={'none'}
+          autoCapitalize="none"
           style={styles.input}
           onChangeText={onChangeText}
+          {...rest}
         />
       </View>
       <View
@@ -34,8 +50,16 @@ export const Input = (props: any) => {
     </View>
   );
 };
-export const ConfirmButton = (props: any) => {
-  const {title, onClick} = props;
+
+interface ConfirmButtonProps {
+  title: string;
+  onClick: (event: GestureResponderEvent) => void;
+}
+
+export const ConfirmButton: React.FC<ConfirmButtonProps> = ({
+  title,
+  onClick,
+}) => {
   return (
     <TouchableOpacity style={styles.confirmLayout} onPress={onClick}>
       <Text style={styles.confirmTitle}>{title}</Text>
@@ -43,8 +67,12 @@ export const ConfirmButton = (props: any) => {
   );
 };
 
-export const Tips = (props: any) => {
-  const {msg, helpUrl} = props;
+interface TipsProps {
+  msg: string;
+  helpUrl?: string;
+}
+
+export const Tips: React.FC<TipsProps> = ({msg, helpUrl}) => {
   return (
     <View style={styles.tipsLayout}>
       <Text style={styles.tips}>{msg}</Text>
@@ -59,20 +87,33 @@ export const Tips = (props: any) => {
     </View>
   );
 };
-export const NavBar = (props: any) => {
-  const {title, rightTitle, onRightClick} = props;
+
+interface NavBarProps {
+  title: string;
+  rightTitle?: string;
+  onRightClick?: (event: GestureResponderEvent) => void;
+}
+
+export const NavBar: React.FC<NavBarProps> = ({
+  title,
+  rightTitle,
+  onRightClick,
+}) => {
   return (
     <View style={styles.navBar}>
       <View />
       <View style={styles.titleLayout}>
         <Text style={styles.title}>{title}</Text>
       </View>
-      <TouchableOpacity onPress={onRightClick}>
-        <Text style={styles.button}>{rightTitle}</Text>
-      </TouchableOpacity>
+      {rightTitle && (
+        <TouchableOpacity onPress={onRightClick}>
+          <Text style={styles.button}>{rightTitle}</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',

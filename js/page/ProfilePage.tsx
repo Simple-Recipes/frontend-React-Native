@@ -71,11 +71,16 @@ const ProfilePage = () => {
     <SafeAreaView style={styles.root}>
       <View style={styles.header}>
         <Text style={styles.title}>Profile</Text>
-        {editMode && (
-          <TouchableOpacity onPress={onUpdateProfile}>
-            <Text style={styles.save}>Save</Text>
+        <View style={styles.headerButtons}>
+          {editMode ? (
+            <TouchableOpacity onPress={onUpdateProfile}>
+              <Text style={styles.save}>Save</Text>
+            </TouchableOpacity>
+          ) : null}
+          <TouchableOpacity onPress={onLogout}>
+            <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
-        )}
+        </View>
       </View>
       <View style={styles.content}>
         <Image source={{uri: user.avatar}} style={styles.avatar} />
@@ -100,18 +105,6 @@ const ProfilePage = () => {
         )}
         <Text style={styles.msg}>{msg}</Text>
       </View>
-      <View style={styles.footer}>
-        <TouchableOpacity onPress={() => NavigationUtil.goPage({}, 'HomePage')}>
-          <Text style={styles.footerText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => NavigationUtil.goPage({}, 'ProfilePage')}>
-          <Text style={styles.footerText}>Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onLogout}>
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };
@@ -127,6 +120,10 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#ffffff',
   },
+  headerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -134,6 +131,7 @@ const styles = StyleSheet.create({
   save: {
     fontSize: 16,
     color: '#1d8cd7',
+    marginRight: 16,
   },
   content: {
     flex: 1,
@@ -156,16 +154,6 @@ const styles = StyleSheet.create({
     color: 'red',
     marginTop: 12,
     textAlign: 'center',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 16,
-    backgroundColor: '#ffffff',
-  },
-  footerText: {
-    fontSize: 16,
-    color: '#647987',
   },
   logoutText: {
     fontSize: 16,

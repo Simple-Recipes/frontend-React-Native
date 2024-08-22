@@ -1,12 +1,18 @@
+/* eslint-env node */
 module.exports = {
   root: true,
   extends: [
-    '@react-native',
-    'plugin:prettier/recommended',
+    'eslint:recommended',
+    'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
+    'prettier',
+    'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'prettier', 'react-native'],
+  env: {
+    node: true,
+  },
   rules: {
     'prettier/prettier': [
       'error',
@@ -15,7 +21,7 @@ module.exports = {
         bracketSameLine: true,
         bracketSpacing: false,
         singleQuote: true,
-        trailingComma: 'all',
+        trailingComma: 'es5',
         printWidth: 80,
         tabWidth: 2,
         semi: true,
@@ -26,14 +32,14 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     'react-native/no-inline-styles': 'warn',
-    'no-multi-spaces': 'off', // 禁用多重空格检查
-    'space-in-parens': 'off', // 禁用括号内空格检查
-    'no-multiple-empty-lines': 'off', // 允许多行空行
-    'padded-blocks': 'off', // 允许块内填充
-    'key-spacing': 'off', // 禁用键值对中的空格检查
-    'comma-dangle': 'off', // 禁用拖尾逗号检查
-    'object-curly-spacing': 'off', // 禁用花括号内的空格检查
-    'array-bracket-spacing': 'off', // 禁用数组括号内的空格检查
-    'computed-property-spacing': 'off', // 禁用计算属性括号内的空格检查
+    'no-multi-spaces': 'off',
+    'space-in-parens': 'off',
+    'no-multiple-empty-lines': 'off',
+    'padded-blocks': 'off',
+    'key-spacing': 'off',
+    'object-curly-spacing': 'off',
+    'array-bracket-spacing': 'off',
+    'computed-property-spacing': 'off',
+    'react/prop-types': 'off',
   },
 };

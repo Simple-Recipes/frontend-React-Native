@@ -22,7 +22,7 @@ const ForgotPasswordPage = (props: {navigation: any}) => {
         onBackPress={() => navigation.goBack()}
       />
       <Text style={styles.instruction}>
-        Enter your email address and we'll send you a link to reset your
+        Enter your email address and we&#39;tll send you a link to reset your
         password.
       </Text>
       <InputField placeholder="Email" value={email} onChangeText={setEmail} />

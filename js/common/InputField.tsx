@@ -1,11 +1,19 @@
 import React from 'react';
-import {TextInput, StyleSheet} from 'react-native';
+import {TextInput, StyleSheet, TextInputProps} from 'react-native';
 
-const InputField = ({
+interface InputFieldProps extends TextInputProps {
+  placeholder?: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  secureTextEntry?: boolean;
+}
+
+const InputField: React.FC<InputFieldProps> = ({
   placeholder,
   value,
   onChangeText,
   secureTextEntry = false,
+  ...rest
 }) => {
   return (
     <TextInput
@@ -14,6 +22,7 @@ const InputField = ({
       value={value}
       onChangeText={onChangeText}
       secureTextEntry={secureTextEntry}
+      {...rest}
     />
   );
 };

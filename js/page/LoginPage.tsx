@@ -10,8 +10,26 @@ import LoginDao from '../expand/dao/LoginDao';
 import NavigationUtil from '../util/NavigationUtil';
 import Button from '../common/Button';
 import InputField from '../common/InputField';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
 
-const LoginPage = ({navigation}) => {
+type RootStackParamList = {
+  LoginPage: undefined;
+  HomePage: undefined;
+  ForgotPasswordPage: undefined;
+  RegistrationPage: undefined;
+};
+
+type LoginScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'LoginPage'
+>;
+
+type LoginPageProps = {
+  navigation: any;
+};
+
+const LoginPage: React.FC<LoginPageProps> = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [msg, setMsg] = useState('');
@@ -64,7 +82,7 @@ const LoginPage = ({navigation}) => {
         style={styles.link}
         onPress={() => NavigationUtil.goPage({navigation}, 'RegistrationPage')}>
         <Text style={styles.linkTextCenter}>
-          Don't have an account? Sign up
+          Don&apos;t have an account? Sign up
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

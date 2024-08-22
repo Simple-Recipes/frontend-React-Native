@@ -22,7 +22,7 @@ export function get(api: string) {
     return handleData(
       fetch(buildParams(baseUrl + api, params), {
         headers: finalHeaders,
-      }),
+      })
     );
   };
 }
@@ -62,7 +62,7 @@ export function post(api: string) {
           method: 'POST',
           body: data,
           headers: finalHeaders,
-        }),
+        })
       );
     };
   };
@@ -92,7 +92,7 @@ export function put(api: string) {
           method: 'PUT',
           body: JSON.stringify(params),
           headers: finalHeaders,
-        }),
+        })
       );
     };
   };
@@ -119,7 +119,7 @@ export function remove(api: string) {
       fetch(buildParams(baseUrl + api, params), {
         method: 'DELETE',
         headers: finalHeaders,
-      }),
+      })
     );
   };
 }
@@ -164,7 +164,7 @@ function handleData(doAction: Promise<Response>) {
  */
 function buildParams(
   url: string,
-  params?: Record<string, any> | string,
+  params?: Record<string, any> | string
 ): string {
   const newUrl = new URL(url);
   let finalUrl;

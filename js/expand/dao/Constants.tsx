@@ -1,3 +1,4 @@
+// expand/dao/Constants.ts
 import Storage from '../../util/storage';
 
 /**
@@ -31,6 +32,8 @@ const Constants = {
   recipes: {
     getDetails: (id: string) => `recipes/${id}`,
     getPopular: 'recipes/popular',
+    getPopularByTag: (tag: string, page: number, pageSize: number) =>
+      `recipes/tag/popular?tag=${encodeURIComponent(tag)}&page=${page}&pageSize=${pageSize}`,
     publish: 'recipes/publish',
     getAllMyRecipes: 'recipes/getAllMyRecipes',
     delete: 'recipes/delete',

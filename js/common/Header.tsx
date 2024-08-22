@@ -1,7 +1,18 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  GestureResponderEvent,
+} from 'react-native';
 
-const Header = ({title, onBackPress}) => {
+interface HeaderProps {
+  title: string;
+  onBackPress: (event: GestureResponderEvent) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({title, onBackPress}) => {
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={onBackPress}>

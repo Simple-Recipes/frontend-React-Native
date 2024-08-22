@@ -1,16 +1,22 @@
 import React, {useEffect} from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
+import {NavigationProp} from '@react-navigation/native';
 import NavigationUtil from '../util/NavigationUtil';
 import SplashScreen from 'react-native-splash-screen';
 import {getBoarding} from '../util/BoardingUtil';
-import {onThemeInit} from '../action/actions';
+import {onThemeInit} from '../action/theme/index';
 
-const WelcomePage = ({navigation, onThemeInit}) => {
+interface WelcomePageProps {
+  navigation: NavigationProp<any>;
+  onThemeInit: () => void;
+}
+
+const WelcomePage: React.FC<WelcomePageProps> = ({navigation, onThemeInit}) => {
   useEffect(() => {
     const initialize = async () => {
       try {
-        onThemeInit();
+        await onThemeInit(); // 这里需要等待 onThemeInit 完成
         await new Promise(resolve => setTimeout(resolve, 200)); // 模拟一个异步任务
         if (SplashScreen && SplashScreen.hide) {
           SplashScreen.hide();
@@ -24,7 +30,7 @@ const WelcomePage = ({navigation, onThemeInit}) => {
           NavigationUtil.login({navigation});
         }
       } catch (e) {
-        console.warn('Error hiding splash screen: ', e);
+        console.warn(<Text>{`Error hiding splash screen: ${e}`}</Text>);
       }
     };
 
@@ -62,7 +68,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatchToProps = (dispatch: (arg0: {type: string}) => any) => ({
+const mapDispatchToProps = (dispatch: any) => ({
   onThemeInit: () => dispatch(onThemeInit()),
 });
 

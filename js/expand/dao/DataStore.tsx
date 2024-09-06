@@ -1,12 +1,22 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getBoarding} from '../../util/BoardingUtil';
-import {Callback} from '@react-native-async-storage/async-storage/lib/typescript/types';
 import {ApiResponse, WrappedData} from '../types/apiTypes';
+import hinet from '../dao/HiNet';
 
 export const FLAG_STORAGE = {flag_popular: 'popular'};
 
 export default class DataStore {
-  fetchData(url: string | undefined, flag: string): Promise<WrappedData> {
+  fetchData(
+    url: string | undefined,
+    flag: string,
+    userToken?: string,
+    params?: {
+      ingredients: string[];
+      includeAllIngredients: boolean;
+      maxTime: number;
+      preference: string;
+    }
+  ): Promise<WrappedData> {
     return new Promise((resolve, reject) => {
       if (!url) {
         return reject(new Error('URL is undefined'));
@@ -14,13 +24,11 @@ export default class DataStore {
 
       this.fetchLocalData(url)
         .then((wrapData: WrappedData) => {
-          console.log('Local Data:', wrapData);
           if (wrapData && DataStore.checkTimestampValid(wrapData.timestamp)) {
             resolve(wrapData);
           } else {
-            this.fetchNetData(url, flag) // 在这里确保url是字符串
+            this.fetchNetData(url, flag)
               .then((data: ApiResponse) => {
-                console.log('Network Data:', data);
                 resolve(this._wrapData(data));
               })
               .catch(error => {
@@ -29,9 +37,8 @@ export default class DataStore {
           }
         })
         .catch(error => {
-          this.fetchNetData(url, flag) // 在这里确保url是字符串
+          this.fetchNetData(url, flag)
             .then((data: ApiResponse) => {
-              console.log('Network Data:', data);
               resolve(this._wrapData(data));
             })
             .catch(error => {
@@ -41,13 +48,20 @@ export default class DataStore {
     });
   }
 
-  saveData(url: string, data: any, callback?: Callback) {
+  async fetchNetData(url: string, flag: string): Promise<ApiResponse> {
+    try {
+      // 使用 hinet 发起请求，确保返回的数据类型是 ApiResponse
+      const response = await hinet.get(url)();
+      return response as ApiResponse;
+    } catch (error) {
+      console.error('Network error while fetching data:', error); // 打印详细的错误信息
+      throw new Error('Failed to fetch network data');
+    }
+  }
+
+  saveData(url: string, data: any) {
     if (!data || !url) return;
-    AsyncStorage.setItem(
-      url,
-      JSON.stringify(this._wrapData(data)),
-      callback || (() => {})
-    );
+    AsyncStorage.setItem(url, JSON.stringify(this._wrapData(data)));
   }
 
   fetchLocalData(url: string): Promise<WrappedData> {
@@ -56,7 +70,6 @@ export default class DataStore {
         if (!error) {
           try {
             if (result !== null && result !== undefined) {
-              // 确保 result 是一个非空字符串
               resolve(JSON.parse(result));
             } else {
               reject(new Error('No data found'));
@@ -68,34 +81,6 @@ export default class DataStore {
           reject(error);
         }
       });
-    });
-  }
-
-  async fetchNetData(url: string, flag: string): Promise<ApiResponse> {
-    const token = await getBoarding();
-    return new Promise((resolve, reject) => {
-      fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error('Network response was not ok.');
-        })
-        .then((responseData: ApiResponse) => {
-          if (responseData.code === 1 && responseData.data) {
-            this.saveData(url, responseData.data);
-            resolve(responseData);
-          } else {
-            reject(new Error('Failed to fetch data'));
-          }
-        })
-        .catch(error => {
-          reject(error);
-        });
     });
   }
 

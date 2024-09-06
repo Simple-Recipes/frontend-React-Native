@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 
 interface ProjectModel {
   id: number;
   title: string;
   likes: number;
   comments: number;
-  createTime: string;
+  link: string; // 这里是图片地址
 }
 
 interface PopularItemProps {
@@ -15,18 +15,17 @@ interface PopularItemProps {
 }
 
 const PopularItem: React.FC<PopularItemProps> = ({projectModel, onSelect}) => {
-  const {title, likes, comments, createTime} = projectModel;
+  const {title, likes, comments, link} = projectModel;
 
   return (
     <TouchableOpacity onPress={() => onSelect(projectModel)}>
       <View style={styles.container}>
+        {/* 渲染图片 */}
+        <Image source={{uri: link}} style={styles.image} />
         <View style={styles.content}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>
             Likes: {likes} | Comments: {comments}
-          </Text>
-          <Text style={styles.date}>
-            Created on: {new Date(createTime).toLocaleDateString()}
           </Text>
         </View>
       </View>
@@ -36,8 +35,7 @@ const PopularItem: React.FC<PopularItemProps> = ({projectModel, onSelect}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'row', // 水平方向布局
     padding: 10,
     margin: 10,
     backgroundColor: '#fff',
@@ -49,6 +47,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 2,
+  },
+  image: {
+    width: 100, // 设置图片宽度
+    height: 100, // 设置图片高度
+    borderRadius: 8,
+    marginRight: 10, // 图片和文本的间距
   },
   content: {
     flex: 1,

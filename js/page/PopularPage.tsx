@@ -1,374 +1,132 @@
-import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  RefreshControl,
-  Image,
-  ActivityIndicator,
-  TouchableOpacity,
-} from 'react-native';
-import {connect} from 'react-redux';
-import actions from '../action/index';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Constants from '../expand/dao/Constants';
-import NavigationBar from '../common/NavigationBar';
-import Toast from 'react-native-easy-toast';
-import FavoriteDao from '../expand/dao/FavoriteDao';
-import Icon from 'react-native-vector-icons/Feather';
+import React, {useState, useEffect} from 'react';
+import {View, Text, FlatList, StyleSheet} from 'react-native';
+import SearchBar from '../common/SearchBar';
+import PopularItem from '../common/PopularItem';
+import DataStore, {FLAG_STORAGE} from '../expand/dao/DataStore'; // 引入 DataStore
+import Constants from '../expand/dao/Constants'; // 导入API常量
+import HiNet from '../expand/dao/HiNet';
+import {useNavigation} from '@react-navigation/native'; // 导航功能
 
-const THEME_COLOR = '#a67';
-
-const Tab = createMaterialTopTabNavigator();
-
-interface ThemeType {
-  themeColor: string;
-  styles: {
-    navBar: object;
-  };
+// Define ProjectModel interface with the required "link" property
+interface ProjectModel {
+  id: number;
+  title: string;
+  likes: number;
+  comments: number;
+  createTime: string;
+  link: string; // Add this to resolve the error
 }
 
-interface TagNameType {
-  name: string;
-}
+const tabNames = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
 
-interface PopularPageProps {
-  tagNames: TagNameType[];
-  theme: ThemeType;
-  onLoadTagName: (flag: string) => void;
-  onRefreshPopular: (
-    storeName: string,
-    url: string,
-    pageSize: number,
-    favoriteDao: any
-  ) => void;
-  onLoadMorePopular: (
-    storeName: string,
-    pageIndex: number,
-    pageSize: number,
-    items: any[],
-    favoriteDao: any,
-    callback: (error: string) => void
-  ) => void;
-}
+const PopularPage: React.FC = () => {
+  const [recipes, setRecipes] = useState<ProjectModel[]>([]); // 存储食谱数据
+  const [currentTab, setCurrentTab] = useState(tabNames[0]); // 当前选中的标签
+  const navigation = useNavigation(); // 导航 hook
+  const dataStore = new DataStore(); // 实例化 DataStore
 
-interface ApiResponse {
-  data: any[];
-  code: number;
-  msg: string;
-}
+  // 使用 DataStore 来获取食谱数据
+  const fetchRecipesByTag = async (
+    tag: string,
+    page: number = 1,
+    pageSize: number = 10
+  ) => {
+    try {
+      const url = Constants.recipes.getPopularByTag(tag, page, pageSize);
+      const response = await HiNet.get(url)();
 
-const PopularPage: React.FC<PopularPageProps> = props => {
-  const tabNames = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
+      console.log('Received response:', response); // 打印完整的响应
 
-  // 搜索图标的按钮
-  const renderRightButton = () => (
-    <TouchableOpacity
-      onPress={() => {
-        /* 跳转到搜索页面 */
-      }}>
-      <Icon name="search" size={24} color="#fff" />
-    </TouchableOpacity>
-  );
+      // Safely access records or fallback to empty array
+      const recipeData = response.data?.records || response.data || [];
 
-  return (
-    <View style={{flex: 1, marginTop: 30}}>
-      <NavigationBar rightButton={renderRightButton()} />
-      <Tab.Navigator
-        screenOptions={{
-          tabBarStyle: styles.tabStyle,
-          tabBarLabelStyle: styles.labelStyle,
-          tabBarIndicatorStyle: styles.indicatorStyle,
-          tabBarScrollEnabled: true,
-        }}>
-        {tabNames.map((name, index) => (
-          <Tab.Screen
-            key={index}
-            name={name}
-            component={PopularTabWrapper}
-            initialParams={{tabLabel: name}}
-          />
-        ))}
-      </Tab.Navigator>
-    </View>
-  );
-};
-
-interface PopularTabProps {
-  route: {params: {tabLabel: string}};
-  popular: any;
-  onRefreshPopular: (
-    storeName: string,
-    url: string,
-    pageSize: number,
-    favoriteDao: any
-  ) => void;
-  onLoadMorePopular: (
-    storeName: string,
-    pageIndex: number,
-    pageSize: number,
-    items: any[],
-    favoriteDao: any,
-    callback: (error: string) => void
-  ) => void;
-  storeName: string;
-  pageSize: number;
-  favoriteDao: any;
-}
-
-const UnconnectedPopularTabPage: React.FC<PopularTabProps> = ({
-  route,
-  popular,
-  onRefreshPopular,
-  onLoadMorePopular,
-  storeName,
-  pageSize,
-  favoriteDao,
-}) => {
-  const [page, setPage] = React.useState(1);
-  const toastRef = React.useRef<typeof Toast>(null);
-  let canLoadMore = false;
-
-  const loadData = (type: 'refresh' | 'loadMore') => {
-    const store = popular?.[storeName] || {
-      items: [],
-      isLoading: false,
-      hideLoadingMore: true,
-    };
-    const url = genFetchUrl(storeName, page, pageSize);
-
-    if (type === 'loadMore') {
-      onLoadMorePopular(
-        storeName,
-        ++store.pageIndex,
-        pageSize,
-        store.items,
-        favoriteDao,
-        error => {
-          if (error) {
-            toastRef.current?.show('没有更多了');
-          }
-        }
-      );
-    } else {
-      onRefreshPopular(storeName, url, pageSize, favoriteDao);
+      setRecipes(recipeData); // 更新状态，确保是 records 数组
+    } catch (error) {
+      console.error('Error fetching popular recipes by tag:', error);
     }
   };
 
-  const genFetchUrl = (key: string, page: number, pageSize: number): string => {
-    return Constants.recipes.getPopularByTag(key, page, pageSize);
+  // 处理搜索请求
+  const handleSearch = async (query: string) => {
+    try {
+      const url = Constants.recipes.search(query);
+      const data = await dataStore.fetchData(url, FLAG_STORAGE.flag_popular); // 使用 DataStore 的 fetchData 方法进行搜索
+      setRecipes(data.data); // 更新搜索到的食谱
+    } catch (error) {
+      console.error('Error searching recipes:', error);
+    }
   };
 
-  React.useEffect(() => {
-    const store = popular?.[storeName] || {
-      items: [],
-      isLoading: false,
-      hideLoadingMore: true,
-    };
-    if (page === 1 || !store.items.length) {
-      loadData('refresh');
-    }
-  }, [page]);
+  // 当标签切换时调用 fetchRecipesByTag
+  useEffect(() => {
+    fetchRecipesByTag(currentTab);
+  }, [currentTab]);
 
-  const renderItem = ({item}: {item: any}) => {
+  // 渲染单个食谱项
+  const renderPopularItem = ({item}: {item: ProjectModel}) => {
+    console.log('Rendering item:', item); // 打印每个项目，检查是否传递成功
     return (
-      <View style={styles.item}>
-        <Image source={{uri: item.link}} style={styles.image} />
-        <View style={styles.itemInfo}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.likes}>点赞: {item.likes}</Text>{' '}
-        </View>
-      </View>
+      <PopularItem
+        projectModel={item}
+        onSelect={() => navigation.navigate('RecipeDetails', {id: item.id})} // Ensure correct parameter passed to onSelect
+      />
     );
-  };
-
-  const store = popular?.[storeName] || {
-    items: [],
-    isLoading: false,
-    hideLoadingMore: true,
   };
 
   return (
     <View style={styles.container}>
+      {/* 搜索栏 */}
+      <SearchBar onSearch={handleSearch} />
+
+      {/* 标签栏 */}
+      <View style={styles.tabContainer}>
+        {tabNames.map(tab => (
+          <Text
+            key={tab}
+            style={[
+              styles.tabItem,
+              currentTab === tab && styles.tabItemSelected,
+            ]}
+            onPress={() => setCurrentTab(tab)}>
+            {tab}
+          </Text>
+        ))}
+      </View>
+
+      {/* 食谱列表 */}
       <FlatList
-        data={store.items}
-        renderItem={renderItem}
-        keyExtractor={item => '' + item.id}
-        refreshControl={
-          <RefreshControl
-            title={'Loading'}
-            titleColor={THEME_COLOR}
-            colors={[THEME_COLOR]}
-            refreshing={store.isLoading}
-            onRefresh={() => loadData('refresh')}
-            tintColor={THEME_COLOR}
-          />
-        }
-        onEndReached={() => {
-          if (canLoadMore) {
-            loadData('loadMore');
-            canLoadMore = false;
-          }
-        }}
-        onEndReachedThreshold={0.5}
-        onMomentumScrollBegin={() => {
-          canLoadMore = true;
-        }}
-        ListFooterComponent={() =>
-          !store.hideLoadingMore ? (
-            <View style={styles.footer}>
-              <ActivityIndicator size="large" color={THEME_COLOR} />
-              <Text style={styles.footerText}>Loading more...</Text>{' '}
-            </View>
-          ) : (
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>No more data</Text>{' '}
-            </View>
-          )
-        }
+        data={recipes} // Ensure correct data type (ProjectModel[])
+        renderItem={renderPopularItem} // 确保 renderItem 函数中 item 的类型为 ProjectModel
+        keyExtractor={item => item.id.toString()}
+        contentContainerStyle={styles.listContainer}
       />
-      <Toast ref={toastRef} position="center" />
     </View>
   );
 };
 
-const ConnectedPopularTabPage = connect(
-  (state: any) => ({
-    popular: state.popular,
-  }),
-  (dispatch: any) => ({
-    onRefreshPopular: (
-      storeName: string,
-      url: string,
-      pageSize: number,
-      favoriteDao: any
-    ) =>
-      dispatch(actions.onRefreshPopular(storeName, url, pageSize, favoriteDao)),
-    onLoadMorePopular: (
-      storeName: string,
-      pageIndex: number,
-      pageSize: number,
-      items: any[],
-      favoriteDao: any,
-      callback: (error: string) => void
-    ) =>
-      dispatch(
-        actions.onLoadMorePopular(
-          storeName,
-          pageIndex,
-          pageSize,
-          items,
-          favoriteDao,
-          callback
-        )
-      ),
-  })
-)(UnconnectedPopularTabPage);
-
-const PopularTabWrapper = (props: any) => {
-  const {tabLabel} = props.route.params;
-  const storeName = tabLabel;
-  const pageSize = 10;
-  const favoriteDao = new FavoriteDao('popular');
-
-  return (
-    <ConnectedPopularTabPage
-      {...props}
-      storeName={storeName}
-      pageSize={pageSize}
-      favoriteDao={favoriteDao}
-    />
-  );
-};
-
-const mapStateToProps = (state: any) => ({
-  popular: state.popular || {},
-  tagNames: state.tagNames || [],
-  theme: state.theme || [],
-});
-
-const mapDispatchToProps = (dispatch: any) => ({
-  onLoadTagName: (flag: string) => dispatch(actions.onLoadTagName(flag)),
-  onRefreshPopular: (
-    storeName: string,
-    url: string,
-    pageSize: number,
-    favoriteDao: any
-  ) =>
-    dispatch(actions.onRefreshPopular(storeName, url, pageSize, favoriteDao)),
-  onLoadMorePopular: (
-    storeName: string,
-    pageIndex: number,
-    pageSize: number,
-    items: any[],
-    favoriteDao: any,
-    callback: (error: string) => void
-  ) =>
-    dispatch(
-      actions.onLoadMorePopular(
-        storeName,
-        pageIndex,
-        pageSize,
-        items,
-        favoriteDao,
-        callback
-      )
-    ),
-});
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
-  footer: {
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#999',
-    marginTop: 5,
-  },
-  tabStyle: {
-    padding: 0,
-  },
-  indicatorStyle: {
-    height: 2,
-    backgroundColor: 'white',
-  },
-  labelStyle: {
-    fontSize: 13,
-    margin: 0,
-  },
-  item: {
+  tabContainer: {
     flexDirection: 'row',
-    padding: 10,
-    marginBottom: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    backgroundColor: '#ffffff',
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+    backgroundColor: '#f0f0f0',
   },
-  image: {
-    width: 100,
-    height: 100,
-    marginRight: 10,
-    borderRadius: 5,
+  tabItem: {
+    fontSize: 16,
+    color: '#333',
   },
-  itemInfo: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  title: {
-    fontSize: 18,
+  tabItemSelected: {
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#007bff',
   },
-  likes: {
-    fontSize: 12,
-    color: '#999',
+  listContainer: {
+    paddingHorizontal: 10,
+    paddingBottom: 20,
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PopularPage);
+export default PopularPage;

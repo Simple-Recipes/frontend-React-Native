@@ -3,11 +3,11 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTheme} from '@react-navigation/native';
 import TabIcon from '../common/TabIcon';
 
-import InventoryPage from '../page/InventoryPage';
-import MealPlanPage from '../page/MealPlanPage';
 import ShoppingListPage from '../page/ShoppingListPage';
 import ProfilePage from '../page/ProfilePage';
 import PopularPage from '../page/PopularPage';
+import RecommendationPage from '../page/RecommendationPage';
+import WeeklyMealPlanScreen from '../page/WeeklyMealPlanScreen'; // 导入 WeeklyMealPlanScreen 页面
 
 const Tab = createBottomTabNavigator();
 
@@ -28,11 +28,11 @@ const DynamicTabNavigator = () => {
               iconName = 'restaurant';
               iconType = 'MaterialIcons';
               break;
-            case 'Inventory':
-              iconName = 'inventory';
+            case 'Recommendation': // 替换 Inventory 为 Recommendation
+              iconName = 'star'; // 合适的图标，表示推荐
               iconType = 'MaterialIcons';
               break;
-            case 'MealPlan':
+            case 'WeeklyMealPlanScreen': // 使用 WeeklyMealPlanScreen 替换 MealPlan
               iconName = 'calendar';
               iconType = 'Ionicons';
               break;
@@ -75,10 +75,62 @@ const DynamicTabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen name="Inventory" component={InventoryPage} />
-      <Tab.Screen name="MealPlan" component={MealPlanPage} />
-      <Tab.Screen name="ShoppingList" component={ShoppingListPage} />
-      <Tab.Screen name="Profile" component={ProfilePage} />
+
+      {/* 替换 Inventory 为 Recommendation */}
+      <Tab.Screen
+        name="Recommendation"
+        component={RecommendationPage}
+        options={{
+          tabBarLabel: 'Recommendation',
+          tabBarIcon: ({color, size}) => (
+            <TabIcon
+              name="star"
+              type="MaterialIcons"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      {/* 使用 WeeklyMealPlanScreen 替换 MealPlan */}
+      <Tab.Screen
+        name="WeeklyMealPlanScreen"
+        component={WeeklyMealPlanScreen}
+        options={{
+          tabBarLabel: 'Meal Plan',
+          tabBarIcon: ({color, size}) => (
+            <TabIcon
+              name="calendar"
+              type="Ionicons"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="ShoppingList"
+        component={ShoppingListPage}
+        options={{
+          tabBarLabel: 'Shopping List',
+          tabBarIcon: ({color, size}) => (
+            <TabIcon name="list" type="Entypo" size={size} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Profile"
+        component={ProfilePage}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({color, size}) => (
+            <TabIcon name="user" type="Entypo" size={size} color={color} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };

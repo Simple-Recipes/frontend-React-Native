@@ -1,5 +1,6 @@
 import NavigationUtil from '../../util/NavigationUtil';
 import Storage from '../../util/storage';
+import {ApiResponse} from '../types/apiTypes';
 import Constants from './Constants';
 
 /**
@@ -9,15 +10,21 @@ import Constants from './Constants';
  */
 export function get(api: string) {
   return async (params?: Record<string, any>) => {
-    const boarding = await Storage.getItem('boarding-pass');
+    const boarding = await Storage.getItem('boarding-pass'); // 从本地存储中获取 JWT token
     const {headers, baseUrl} = Constants;
-    const authHeader = await headers.Authorization;
+
+    // 设置 User-Token 头，直接发送 JWT token，不加 Bearer 前缀
+    const authHeader = boarding;
+
+    console.log('JWT token in request (User-Token):', authHeader); // 打印 token 确认
 
     const finalHeaders: HeadersInit = {
       ...headers,
-      Authorization: await authHeader,
-      'boarding-pass': boarding || '',
+      'User-Token': authHeader, // 将 token 放入 User-Token 头
     };
+
+    // 确认 baseUrl 拼接正确
+    console.log('Final URL:', buildParams(baseUrl + api, params));
 
     return handleData(
       fetch(buildParams(baseUrl + api, params), {
@@ -33,38 +40,37 @@ export function get(api: string) {
  * @returns
  */
 export function post(api: string) {
-  return (params: Record<string, any>) => {
-    return async (queryParams?: Record<string, any> | string) => {
-      const boarding = await Storage.getItem('boarding-pass');
-      const {headers, baseUrl} = Constants;
-      const authHeader = await headers.Authorization;
+  return async (params: Record<string, any>) => {
+    const boarding = await Storage.getItem('boarding-pass'); // 从本地存储中获取 JWT token
+    const {headers, baseUrl} = Constants;
 
-      let data;
-      let cType;
+    const authHeader = boarding; // JWT token
 
-      if (params instanceof FormData) {
-        data = params;
-        cType = 'multipart/form-data';
-      } else {
-        data = JSON.stringify(params);
-        cType = 'application/json';
-      }
+    let data;
+    let cType;
 
-      const finalHeaders: HeadersInit = {
-        ...headers,
-        'content-type': cType,
-        Authorization: await authHeader,
-        'boarding-pass': boarding || '',
-      };
+    if (params instanceof FormData) {
+      data = params;
+      cType = 'multipart/form-data';
+    } else {
+      data = JSON.stringify(params);
+      cType = 'application/json';
+    }
 
-      return handleData(
-        fetch(buildParams(baseUrl + api, queryParams), {
-          method: 'POST',
-          body: data,
-          headers: finalHeaders,
-        })
-      );
+    const finalHeaders: HeadersInit = {
+      ...headers,
+      'content-type': cType,
+      'User-Token': authHeader,
     };
+
+    // Ensure the POST request is returning a promise and not a function
+    return handleData(
+      fetch(buildParams(baseUrl + api), {
+        method: 'POST',
+        body: data,
+        headers: finalHeaders,
+      })
+    );
   };
 }
 
@@ -78,13 +84,13 @@ export function put(api: string) {
     return async (queryParams?: Record<string, any> | string) => {
       const boarding = await Storage.getItem('boarding-pass');
       const {headers, baseUrl} = Constants;
-      const authHeader = await headers.Authorization;
+
+      const authHeader = boarding; // 直接使用 JWT token，不加 Bearer 前缀
 
       const finalHeaders: HeadersInit = {
         ...headers,
         'content-type': 'application/json',
-        Authorization: await authHeader,
-        'boarding-pass': boarding || '',
+        'User-Token': authHeader, // 将 token 放入 User-Token 头
       };
 
       return handleData(
@@ -107,12 +113,12 @@ export function remove(api: string) {
   return async (params?: Record<string, any>) => {
     const boarding = await Storage.getItem('boarding-pass');
     const {headers, baseUrl} = Constants;
-    const authHeader = await headers.Authorization;
+
+    const authHeader = boarding; // 直接使用 JWT token，不加 Bearer 前缀
 
     const finalHeaders: HeadersInit = {
       ...headers,
-      Authorization: await authHeader,
-      'boarding-pass': boarding || '',
+      'User-Token': authHeader, // 将 token 放入 User-Token 头
     };
 
     return handleData(
@@ -129,7 +135,7 @@ export function remove(api: string) {
  * @param doAction
  * @returns
  */
-function handleData(doAction: Promise<Response>) {
+function handleData(doAction: Promise<Response>): Promise<ApiResponse> {
   return new Promise((resolve, reject) => {
     doAction
       .then(res => {
@@ -143,12 +149,17 @@ function handleData(doAction: Promise<Response>) {
         if (typeof result === 'string') {
           throw new Error(result);
         }
-        const {code, msg, data: {list = undefined} = {}} = result;
+
+        // 确保 result 是 ApiResponse 类型
+        const {code, msg, data} = result as ApiResponse;
+
         if (code === 401) {
           NavigationUtil.login();
           return;
         }
-        resolve(list || result);
+
+        // 返回完整的 ApiResponse 数据
+        resolve(result as ApiResponse);
       })
       .catch(error => {
         reject(error);
@@ -175,10 +186,14 @@ function buildParams(
     }
     finalUrl = newUrl.toString();
   } else if (typeof params === 'string') {
-    finalUrl = url.endsWith('/') ? url + params : url + '/' + params;
+    // 修复此处逻辑，避免多余的斜杠
+    finalUrl = url.endsWith('/') ? url + params : `${url}/${params}`;
   } else {
     finalUrl = newUrl.toString();
   }
+
+  // 确保 URL 没有多余的 "/"
+  finalUrl = finalUrl.replace(/\/$/, ''); // 移除结尾的斜杠
 
   return finalUrl;
 }

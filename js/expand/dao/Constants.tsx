@@ -1,4 +1,5 @@
 // expand/dao/Constants.ts
+import SearchBar from 'js/common/SearchBar';
 import Storage from '../../util/storage';
 
 /**
@@ -34,6 +35,8 @@ const Constants = {
     getPopular: 'recipes/popular',
     getPopularByTag: (tag: string, page: number, pageSize: number) =>
       `recipes/tag/popular?tag=${encodeURIComponent(tag)}&page=${page}&pageSize=${pageSize}`,
+    search: (query: string) =>
+      `recipes/search?keyword=${encodeURIComponent(query)}`,
     publish: 'recipes/publish',
     getAllMyRecipes: 'recipes/getAllMyRecipes',
     delete: 'recipes/delete',
@@ -67,7 +70,7 @@ const Constants = {
   },
 
   recommendations: {
-    get: 'recommendation',
+    post: 'recommendation',
   },
 
   tags: {

@@ -11,11 +11,13 @@ import NavigationUtil from '../util/NavigationUtil';
 import WelcomePage from '../page/WelcomePage';
 import HomePage from '../page/HomePage';
 import LoginPage from '../page/LoginPage';
-// import DynamicTabNavigator from './DynamicTabNavigator';
 import ProfilePage from '../page/ProfilePage';
 import RegistrationPage from '../page/RegistrationPage';
 import ForgotPasswordPage from '../page/ForgotPasswordPage';
 import ResetPasswordPage from '../page/ResetPasswordPage';
+import RecipeDetailsPage from '../page/RecipeDetailsPage';
+import WeeklyMealRecommendations from '../page/WeeklyMealRecommendations';
+import WeeklyMealPlanScreen from '../page/WeeklyMealPlanScreen'; // 导入新增的两个页面
 import theme from '../action/theme/index';
 
 const Stack = createStackNavigator();
@@ -35,46 +37,29 @@ export default function AppNavigator() {
       ref={navigatorRef => {
         NavigationUtil.navigation = navigatorRef as NavigationContainerRef<any>;
       }}
-      theme={MyTheme} // 应用主题
-    >
+      theme={MyTheme}>
       <Stack.Navigator
         initialRouteName="WelcomePage"
-        screenOptions={{headerShown: false}} // 全局禁用 header
-      >
-        <Stack.Screen
-          name="WelcomePage"
-          component={WelcomePage}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="LoginPage"
-          component={LoginPage}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="HomePage"
-          component={HomePage}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="ProfilePage"
-          component={ProfilePage}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="RegistrationPage"
-          component={RegistrationPage}
-          options={{headerShown: false}}
-        />
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="WelcomePage" component={WelcomePage} />
+        <Stack.Screen name="LoginPage" component={LoginPage} />
+        <Stack.Screen name="HomePage" component={HomePage} />
+        <Stack.Screen name="ProfilePage" component={ProfilePage} />
+        <Stack.Screen name="RegistrationPage" component={RegistrationPage} />
         <Stack.Screen
           name="ForgotPasswordPage"
           component={ForgotPasswordPage}
-          options={{headerShown: false}}
+        />
+        <Stack.Screen name="ResetPasswordPage" component={ResetPasswordPage} />
+        <Stack.Screen name="RecipeDetails" component={RecipeDetailsPage} />
+
+        <Stack.Screen
+          name="WeeklyMealRecommendations"
+          component={WeeklyMealRecommendations}
         />
         <Stack.Screen
-          name="ResetPasswordPage"
-          component={ResetPasswordPage}
-          options={{headerShown: false}}
+          name="WeeklyMealPlanScreen"
+          component={WeeklyMealPlanScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

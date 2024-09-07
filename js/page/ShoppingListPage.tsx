@@ -1,38 +1,65 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+// ShoppingListPage.tsx
+import React, {useState, useEffect} from 'react';
+import {View, FlatList, StyleSheet, Alert, Text} from 'react-native';
+import ShoppingListItem from '../common/ShoppingListItem'; // Component to show each shopping list item
+import HiNet from '../expand/dao/HiNet';
+import Constants from '../expand/dao/Constants';
 
-const ShoppingListPage = () => {
+const ShoppingListPage: React.FC = () => {
+  const [shoppingList, setShoppingList] = useState<any[]>([]);
+
+  // Fetch shopping list items from API
+  const fetchShoppingList = async () => {
+    try {
+      const response = await HiNet.get(Constants.shoppingList.get)(); // Replace with the correct API endpoint
+      setShoppingList(response.data);
+    } catch (error) {
+      console.error('Error fetching shopping list:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchShoppingList();
+  }, []);
+
+  const handleCheckboxToggle = async (itemId: number) => {
+    try {
+      await HiNet.post(Constants.shoppingList.toggle)(itemId); // API call to toggle checkbox
+      fetchShoppingList(); // Refresh data
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update shopping list');
+    }
+  };
+
+  const renderItem = ({item}: {item: any}) => (
+    <ShoppingListItem
+      item={item}
+      onToggle={() => handleCheckboxToggle(item.id)}
+    />
+  );
+
   return (
-    <SafeAreaView style={styles.root}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Shopping List</Text>
-      </View>
-      <View style={styles.content}>
-        <Text>Shopping list goes here...</Text>
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text style={styles.title}>Shopping List</Text>
+      <FlatList
+        data={shoppingList}
+        renderItem={renderItem}
+        keyExtractor={item => item.id.toString()}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  root: {
+  container: {
     flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
     padding: 16,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 20,
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginBottom: 16,
   },
 });
 

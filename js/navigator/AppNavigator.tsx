@@ -19,6 +19,8 @@ import RecipeDetailsPage from '../page/RecipeDetailsPage';
 import WeeklyMealRecommendations from '../page/WeeklyMealRecommendations';
 import WeeklyMealPlanScreen from '../page/WeeklyMealPlanScreen'; // 导入新增的两个页面
 import theme from '../action/theme/index';
+import InventoryPage from '../page/InventoryPage';
+import ShoppingListPage from '../page/ShoppingListPage';
 
 const Stack = createStackNavigator();
 enableScreens();
@@ -52,7 +54,6 @@ export default function AppNavigator() {
         />
         <Stack.Screen name="ResetPasswordPage" component={ResetPasswordPage} />
         <Stack.Screen name="RecipeDetails" component={RecipeDetailsPage} />
-
         <Stack.Screen
           name="WeeklyMealRecommendations"
           component={WeeklyMealRecommendations}
@@ -61,6 +62,8 @@ export default function AppNavigator() {
           name="WeeklyMealPlanScreen"
           component={WeeklyMealPlanScreen}
         />
+        <Stack.Screen name="InventoryPage" component={InventoryPage} />
+        <Stack.Screen name="ShoppingListPage" component={ShoppingListPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

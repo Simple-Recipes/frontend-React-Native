@@ -7,7 +7,8 @@ import ShoppingListPage from '../page/ShoppingListPage';
 import ProfilePage from '../page/ProfilePage';
 import PopularPage from '../page/PopularPage';
 import RecommendationPage from '../page/RecommendationPage';
-import WeeklyMealPlanScreen from '../page/WeeklyMealPlanScreen'; // 导入 WeeklyMealPlanScreen 页面
+import WeeklyMealPlanScreen from '../page/WeeklyMealPlanScreen';
+import InventoryPage from '../page/InventoryPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -76,7 +77,6 @@ const DynamicTabNavigator = () => {
         }}
       />
 
-      {/* 替换 Inventory 为 Recommendation */}
       <Tab.Screen
         name="Recommendation"
         component={RecommendationPage}
@@ -93,9 +93,8 @@ const DynamicTabNavigator = () => {
         }}
       />
 
-      {/* 使用 WeeklyMealPlanScreen 替换 MealPlan */}
       <Tab.Screen
-        name="WeeklyMealPlanScreen"
+        name="WeeklyMealPlan"
         component={WeeklyMealPlanScreen}
         options={{
           tabBarLabel: 'Meal Plan',
@@ -111,10 +110,10 @@ const DynamicTabNavigator = () => {
       />
 
       <Tab.Screen
-        name="ShoppingList"
-        component={ShoppingListPage}
+        name="Inventory"
+        component={InventoryPage}
         options={{
-          tabBarLabel: 'Shopping List',
+          tabBarLabel: 'Inventory',
           tabBarIcon: ({color, size}) => (
             <TabIcon name="list" type="Entypo" size={size} color={color} />
           ),

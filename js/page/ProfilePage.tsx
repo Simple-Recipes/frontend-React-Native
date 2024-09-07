@@ -6,7 +6,9 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker'; // Import image picker
 import {useNavigation} from '@react-navigation/native';
 import Storage from '../util/storage';
 import InputField from '../common/InputField';
@@ -39,11 +41,15 @@ const ProfilePage = () => {
     try {
       const token = await Storage.getItem('jwt-token');
       const response = await get(Constants.user.profile)();
-      const userData = response as UserProfile;
-      userData.avatar =
-        userData.avatar ||
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8KBogEsVJytTynCC0znYh07_aw_ylaOLd_g&usqp=CAU';
-      setUser(userData);
+      if (response && response.code === 1) {
+        const userData = response.data as unknown as UserProfile;
+        userData.avatar =
+          userData.avatar ||
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8KBogEsVJytTynCC0znYh07_aw_ylaOLd_g&usqp=CAU';
+        setUser(userData);
+      } else {
+        setMsg('Failed to load user profile');
+      }
     } catch (e) {
       setMsg('Failed to load user profile');
     }
@@ -52,7 +58,7 @@ const ProfilePage = () => {
   const onUpdateProfile = async () => {
     try {
       const token = await Storage.getItem('jwt-token');
-      await put(Constants.user.updateProfile)(user);
+      await put(Constants.user.updateProfile)(user); // Update user profile
       setEditMode(false);
       setMsg('Profile updated successfully');
     } catch (e) {
@@ -61,10 +67,31 @@ const ProfilePage = () => {
   };
 
   const onLogout = () => {
-    // Clear token and other storage
     Storage.removeItem('jwt-token');
-    // Reset to LoginPage and prevent back navigation
     NavigationUtil.resetToLogin({navigation});
+  };
+
+  const handleChooseAvatar = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        includeBase64: true,
+      },
+      response => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.errorCode) {
+          console.error('Image picker error: ', response.errorMessage);
+          Alert.alert('Error', 'Failed to pick image');
+        } else if (response.assets && response.assets.length > 0) {
+          const selectedImage = response.assets[0].uri;
+
+          if (selectedImage) {
+            setUser({...user, avatar: selectedImage});
+          }
+        }
+      }
+    );
   };
 
   return (
@@ -76,14 +103,20 @@ const ProfilePage = () => {
             <TouchableOpacity onPress={onUpdateProfile}>
               <Text style={styles.save}>Save</Text>
             </TouchableOpacity>
-          ) : null}
+          ) : (
+            <TouchableOpacity onPress={() => setEditMode(true)}>
+              <Text style={styles.edit}>Edit</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={onLogout}>
             <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.content}>
-        <Image source={{uri: user.avatar}} style={styles.avatar} />
+        <TouchableOpacity onPress={handleChooseAvatar}>
+          <Image source={{uri: user.avatar}} style={styles.avatar} />
+        </TouchableOpacity>
         {editMode ? (
           <>
             <InputField
@@ -129,6 +162,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   save: {
+    fontSize: 16,
+    color: '#1d8cd7',
+    marginRight: 16,
+  },
+  edit: {
     fontSize: 16,
     color: '#1d8cd7',
     marginRight: 16,

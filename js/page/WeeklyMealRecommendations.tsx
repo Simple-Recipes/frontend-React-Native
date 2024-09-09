@@ -22,7 +22,7 @@ const WeeklyMealRecommendations: React.FC = () => {
             source={require('../assert/image/FoodGreen.jpg')}
             style={styles.mealImage}
           />
-          <Text>Monday: Lean and green</Text>
+          <Text>Lean and green</Text>
           <Text>4 recipes</Text>
         </View>
         <View style={styles.mealOption}>
@@ -30,7 +30,7 @@ const WeeklyMealRecommendations: React.FC = () => {
             source={require('../assert/image/HighProtein1.jpg')}
             style={styles.mealImage}
           />
-          <Text>Tuesday: High protein</Text>
+          <Text>High protein</Text>
           <Text>5 recipes</Text>
         </View>
         <View style={styles.mealOption}>
@@ -38,7 +38,7 @@ const WeeklyMealRecommendations: React.FC = () => {
             source={require('../assert/image/QuickAndEasy.jpg')}
             style={styles.mealImage}
           />
-          <Text>Wednesday: Quick and easy</Text>
+          <Text> Quick and easy</Text>
           <Text>6 recipes</Text>
         </View>
       </View>

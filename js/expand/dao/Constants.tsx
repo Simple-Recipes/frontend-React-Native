@@ -78,6 +78,12 @@ const Constants = {
     addNewTag: 'tags/addNewTag',
     deleteTag: (id: string) => `tags/${id}`,
   },
+  inventory: {
+    getAll: 'inventory/getAllMyInventory',
+    add: 'inventory/add',
+    delete: 'inventory/delete',
+    update: 'inventory/edit',
+  },
 };
 
 export default Constants;

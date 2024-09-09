@@ -8,7 +8,7 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
-platform :ios, min_ios_version_supported
+platform :ios, '13.4'
 prepare_react_native_project!
 
 linkage = ENV['USE_FRAMEWORKS']
@@ -23,14 +23,16 @@ target 'GitHub_RN' do
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
-    :app_path => "#{Pod::Config.instance.installation_root}/.."
+    :app_path => "#{Pod::Config.instance.installation_root}/..",
+    :hermes_enabled => true,  # Hermes 启用配置
+    :fabric_enabled => false  # 如果你不需要 Fabric，可以禁用
   )
 
-  # # Add this line
+  # 添加其他 Pods
   # pod 'RNScreens', :path => '../node_modules/react-native-screens'
-  # # Pods for YourApp
   # pod 'react-native-async-storage', :path => '../node_modules/@react-native-async-storage/async-storage'
   # pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
   target 'GitHub_RNTests' do
     inherit! :complete
@@ -38,13 +40,18 @@ target 'GitHub_RN' do
   end
 
   post_install do |installer|
-    # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4'
+      end
+    end
+
+    # react_native_post_install 调用
     react_native_post_install(
       installer,
       config[:reactNativePath],
-      :mac_catalyst_enabled => false,
+      :mac_catalyst_enabled => false
       # :ccache_enabled => true
     )
   end
-
 end

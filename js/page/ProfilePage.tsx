@@ -117,25 +117,27 @@ const ProfilePage = () => {
         <TouchableOpacity onPress={handleChooseAvatar}>
           <Image source={{uri: user.avatar}} style={styles.avatar} />
         </TouchableOpacity>
-        {editMode ? (
-          <>
-            <InputField
-              placeholder="Username"
-              value={user.username}
-              onChangeText={(text: any) => setUser({...user, username: text})}
-            />
-            <InputField
-              placeholder="Email"
-              value={user.email}
-              onChangeText={(text: any) => setUser({...user, email: text})}
-            />
-          </>
-        ) : (
-          <>
-            <Text style={styles.text}>{user.username}</Text>
-            <Text style={styles.text}>{user.email}</Text>
-          </>
-        )}
+        <View style={styles.card}>
+          {editMode ? (
+            <>
+              <InputField
+                placeholder="Username"
+                value={user.username}
+                onChangeText={(text: any) => setUser({...user, username: text})}
+              />
+              <InputField
+                placeholder="Email"
+                value={user.email}
+                onChangeText={(text: any) => setUser({...user, email: text})}
+              />
+            </>
+          ) : (
+            <>
+              <Text style={styles.text}>{user.username}</Text>
+              <Text style={styles.text}>{user.email}</Text>
+            </>
+          )}
+        </View>
         <Text style={styles.msg}>{msg}</Text>
       </View>
     </SafeAreaView>
@@ -181,6 +183,20 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignSelf: 'center',
     marginBottom: 16,
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 16,
+    marginVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2, // For Android shadow
   },
   text: {
     fontSize: 16,

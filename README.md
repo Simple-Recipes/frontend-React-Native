@@ -103,9 +103,3 @@ Watch the [RecipesApp-demo.mov](Demo/RecipeAppDemo.mov) to see the app in action
 ## License
 
 This project is licensed under the MIT License.
-
-## Notes
-
-1. Replace `path/to/` in image links with the actual file paths for each uploaded image and demo video.
-2. Confirm that the video path is accessible and correctly formatted for viewing.
-3. Additional rows and columns can be added or modified as necessary.

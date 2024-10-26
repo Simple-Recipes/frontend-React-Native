@@ -44,14 +44,16 @@ A React Native app for managing recipes, meal planning, inventory tracking, and 
 
 | Ingredient-based Recommendations | Recipe Recommendations | Detailed Recommendations |
 |----------------------------------|------------------------|--------------------------|
-| ![Recommendation Page](Screenshots/RecommendationPage.png) | ![Weekly Themes](Screenshots/WeeklyTheme.png) | ![Recommendation Details](Screenshots/recommendationPageDetails1.png) |
+| ![Recommendation Page](Screenshots/RecommendationPage.png) | ![Weekly Themes](Screenshots/WeeklyTheme.png) | ![Recommendation Details](Screenshots/RecommendationPageDetailsPage.png) |
 
 ### 5. Meal Planning
 - **Weekly Meal Planner**: Plan meals by selecting recipes for each day of the week, categorized by meal type (Breakfast, Lunch, Dinner).
+- **Weekly Themes**: Discover themed recipe collections (e.g., "High Protein," "Quick and Easy") that align with dietary goals or lifestyle preferences, providing a curated selection for each week.
 
-| Weekly Meal Plan |
-|------------------|
-| ![Weekly Meal Plan](Screenshots/WeeklyPlanningPage.png) |
+| Weekly Meal Plan | Weekly Themes |
+|------------------|---------------|
+| ![Weekly Meal Plan](Screenshots/WeeklyPlanningPage.png) | ![Weekly Themes](Screenshots/WeeklyTheme.png) |
+
 
 ### 6. Inventory Management
 - **Inventory Tracking**: Add, edit, and manage food items in the inventory. Track quantities and units.
@@ -87,7 +89,7 @@ This app requires Expo to run on a local device or simulator. After installation
 
 ## Demo
 
-Watch the [RecipesApp demo.mov](Demo/RecipeApp Demo without voice.mov) to see the app in action.
+Watch the [RecipesApp-demo.mov](Demo/RecipeAppDemo.mov) to see the app in action.
 
 ## Contributing
 

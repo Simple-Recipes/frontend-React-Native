@@ -1,4 +1,19 @@
 {
   "name": "GitHub_RN",
-  "displayName": "GitHub_RN"
+  "displayName": "GitHub_RN",
+  "expo": {
+    "name": "GitHub_RN",
+    "displayName": "GitHub_RN",
+    "extra": {
+      "eas": {
+        "projectId": "ee92bebe-aefa-4219-9b34-c55ea43f8442"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/ee92bebe-aefa-4219-9b34-c55ea43f8442"
+    },
+    "android": {},
+    "ios": {}
+  }
 }

@@ -1,79 +1,100 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Recipe Management System
 
-# Getting Started
+A React Native app for managing recipes, meal planning, inventory tracking, and more, optimized for iOS and (future) Android support. This project allows users to explore, save, and manage recipes, with additional features for meal planning and inventory management.
 
-> **Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Table of Contents
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Demo](#demo)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Step 1: Start the Metro Server
+## Features
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+### 1. User Authentication
+- **Sign Up**: New users can create an account with their username, email, and password.  
+  ![Sign Up Page](Screenshots/SignUpPage.png)
+- **Login**: Existing users can log in to their accounts by entering their credentials.  
+  ![Login Page](Screenshots/LoginPage.png)
+- **Forgot Password**: Users can recover their account by providing an email address, and a reset link will be sent to them.  
+  ![Forgot Password Page](Screenshots/ForgetPasswordPage.png)
 
-To start Metro, run the following command from the _root_ of your React Native project:
+### 2. User Profile
+- **Profile Page**: Users can view and edit their profile details such as username and email.  
+  ![Profile Page](Screenshots/ProfilePage.png)
+- **Edit Profile**: Allows users to modify their profile information and save updates.  
+  ![Profile Edit Page](Screenshots/ProfileEditPage.png)
 
-```bash
-# using npm
-npm start
+### 3. Recipe Management
+- **Recipe Listings**: Users can browse recipes categorized by meal type (e.g., Breakfast, Lunch, Dinner).
+  ![Home Page](Screenshots/HomePage.png)
+- **Recipe Details**: View detailed instructions, ingredients, and user interactions like likes and comments.  
+  ![Recipe Details](Screenshots/RecipesDetailsPage.png)
 
-# OR using Yarn
-yarn start
+### 4. Recommendations
+- **Ingredient-based Recommendations**: Users can enter ingredients they have, specify preferences, and receive tailored recipe suggestions.  
+  ![Recommendation Page](Screenshots/RecommendationPage.png)
+- **Recipe Recommendations**: Display recipes based on themes or dietary goals, like "High Protein" or "Low Calories."  
+  ![Weekly Themes](Screenshots/WeeklyTheme.png)
+- **Detailed Recommendations**: Displays a list of recipes under a selected theme or dietary goal.  
+  ![Recommendation Details](path/to/recommendationPageDetails1.png)
+
+### 5. Meal Planning
+- **Weekly Meal Planner**: Plan meals by selecting recipes for each day of the week, categorized by meal type (Breakfast, Lunch, Dinner).  
+  ![Weekly Meal Plan](Screenshots/WeeklyPlanningPage.png)
+
+### 6. Inventory Management
+- **Inventory Tracking**: Add, edit, and manage food items in the inventory. Track quantities and units.  
+  ![Inventory Page](Screenshots/InventeryPage.png)
+- **Inventory Item Details**: View detailed information of each inventory item, with options to update quantities and units.  
+  ![Inventory Detail](Screenshots/InventoryDetailPage.png)
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/recipe-management-app.git
+   cd recipe-management-app
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Run the app in Expo for iOS:
+   ```bash
+   expo start --ios
+   ```
+   _Note: Android support will be added soon._
+
+## Usage
+
+### Running Locally
+This app requires Expo to run on a local device or simulator. After installation, use the Expo CLI to load the app on your preferred device.
+
+## Demo
+
+Watch the [RecipesApp demo.mov](Demo/RecipeApp Demo without voice.mov) to see the app in action.
+
+## Contributing
+
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature-name
+   ```
+3. Commit your changes and open a pull request.
+
+## License
+
+This project is licensed under the MIT License.
 ```
 
-## Step 2: Start your Application
+### Notes
+1. **Replace** `path/to/` with the actual paths for the uploaded images and demo video.
+2. **Verify** the demo video link format and path once uploaded to ensure smooth access.
+3. **Confirm** if additional sections are needed for any other app functionality.
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Let me know if further adjustments are needed!

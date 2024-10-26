@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
 import SearchBar from '../common/SearchBar';
 import PopularItem from '../common/PopularItem';
-import DataStore, {FLAG_STORAGE} from '../expand/dao/DataStore'; // 引入 DataStore
-import Constants from '../expand/dao/Constants'; // 导入API常量
+import DataStore, {FLAG_STORAGE} from '../expand/dao/DataStore'; //  DataStore
+import Constants from '../expand/dao/Constants'; // API
 import HiNet from '../expand/dao/HiNet';
-import {useNavigation} from '@react-navigation/native'; // 导航功能
+import {useNavigation} from '@react-navigation/native';
 
 // Define ProjectModel interface with the required "link" property
 interface ProjectModel {

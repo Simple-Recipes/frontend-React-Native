@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">TempProject</string>
-    <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
-    <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
-     <string moduleConfig="true" name="CodePushDeploymentKey">vlCGCJ7alnwggJqu2XSwTLIQ1H2OzxP3IJhdy</string>
- 
+  <string name="app_name">TempProject</string>
+  <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
+  <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
+  <string moduleConfig="true" name="CodePushDeploymentKey">vlCGCJ7alnwggJqu2XSwTLIQ1H2OzxP3IJhdy</string>
+  <string name="expo_runtime_version">1.0.0</string>
 </resources>

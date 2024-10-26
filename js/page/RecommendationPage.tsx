@@ -268,13 +268,17 @@ const styles = StyleSheet.create({
   },
   preferenceContainer: {
     marginBottom: 20,
+    alignItems: 'center',
   },
   preferenceButton: {
     backgroundColor: '#ddd',
     paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 8,
     alignItems: 'center',
-    marginVertical: 5,
+    alignSelf: 'center', // Ensure the button is centered
+    width: '70%', // Set a fixed width or percentage width for the buttons
+    marginVertical: 5, // Add margin to space the buttons vertically
   },
   selectedPreferenceButton: {
     backgroundColor: '#007bff',
